@@ -1,12 +1,13 @@
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import Table from "react-bootstrap/Table";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Modal, Button, Table } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles.css";
 
 export default function App() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const fetchFunction = async () => {
     const res = await fetch("https://dummyjson.com/products");
@@ -29,6 +30,12 @@ export default function App() {
 
   const openWindow = (prod) => {
     setSelectedProduct(prod);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedProduct(null);
   };
 
   return (
@@ -44,27 +51,6 @@ export default function App() {
                   onClick={() => openWindow(prod)}
                 />
                 <span>{prod.title}</span>
-                {selectedProduct && selectedProduct.id === prod.id && (
-                  <div className="open_table">
-                    <img src={prod.thumbnail} alt={prod.title} />
-                    <Table>
-                      <thead>
-                        <tr>
-                          <th>Brand</th>
-                          <th>Category</th>
-                          <th>Price</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>{prod.brand}</td>
-                          <td>{prod.category}</td>
-                          <td>{prod.price}</td>
-                        </tr>
-                      </tbody>
-                    </Table>
-                  </div>
-                )}
               </span>
             );
           })}
@@ -85,6 +71,40 @@ export default function App() {
           <span onClick={() => selectHandler(page + 1)}>➡️</span>
         </div>
       )}
+
+      {/* Bootstrap Modal */}
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>{selectedProduct && selectedProduct.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <img
+            src={selectedProduct && selectedProduct.thumbnail}
+            alt={selectedProduct && selectedProduct.title}
+          />
+          <Table>
+            <thead>
+              <tr>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{selectedProduct && selectedProduct.brand}</td>
+                <td>{selectedProduct && selectedProduct.category}</td>
+                <td>{selectedProduct && selectedProduct.price}</td>
+              </tr>
+            </tbody>
+          </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
