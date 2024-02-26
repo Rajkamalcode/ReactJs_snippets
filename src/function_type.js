@@ -2,7 +2,7 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Table from "react-bootstrap/Table";
 import { useState, useEffect } from "react";
 import "./styles.css";
-
+//functiontype
 export default function App() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
