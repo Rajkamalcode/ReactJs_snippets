@@ -81,6 +81,7 @@ export default function App() {
           <img
             src={selectedProduct && selectedProduct.thumbnail}
             alt={selectedProduct && selectedProduct.title}
+            className="modal__image"
           />
           <Table>
             <thead>
